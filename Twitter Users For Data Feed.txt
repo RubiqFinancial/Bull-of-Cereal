@@ -1,0 +1,6 @@
+//These are the Twitter User links for the data stream, which will be part of the entry/take profit signals in the trading strategy
+//Logic for each of these users is pending...
+
+https://twitter.com/elonmusk 
+https://twitter.com/whale_alert?s=20 
+https://twitter.com/LunarCRUSHbot?s=20

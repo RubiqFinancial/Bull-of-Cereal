@@ -1,0 +1,3 @@
+//This is the tradingview link for the single script. You will have to copy the script as it is in View Only and then take the Pinescript script directly from the Script Editor
+
+https://www.tradingview.com/chart/LYnLxdvQ/
