@@ -1,11 +1,12 @@
+from exchanges import exchange
+
 import requests
 
-class BitrueExchange:
+class BitrueExchange(exchange.Exchange):
 
     def __init__(self):
-        self.namestr = 'Bitrue'
-        self._url = 'https://www.bitrue.com/api/v1/'
-        self._endpoint = ''
+        self._setName('Bitrue')
+        self._setUrl('https://www.bitrue.com/api/v1/')
 
     def _responseOk(self, response) -> bool:
         if response == None:
@@ -19,17 +20,23 @@ class BitrueExchange:
             print('There was a problem sending the request ({:s}) ({:d}).'.format(response.url, response.status_code))
             return False
 
-    def getSymbols(self) -> requests.Response:
+    def getSymbols(self) -> dict:
         pass
 
-    def getTime(self) -> requests.Response:
+    def getTime(self) -> dict:
+        endpoint = 'time'
+        # this server reports UTC time
+        response = requests.get(self.getUrl() + endpoint)
+        if not self._responseOk(response):
+            return None
+
+        return response.json()
+
+    def getSymbolPrice(self, symbol) -> dict:
         pass
 
-    def getSymbolPrice(self, symbol) -> requests.Response:
+    def getHistoricalData(self, symbol, interval, start, limit) -> dict:
         pass
 
-    def getHistoricalData(self, symbol, interval, start, limit) -> requests.Response:
-        pass
-
-    def getAccountInfo(self) -> requests.Response:
+    def getAccountInfo(self) -> dict:
         pass

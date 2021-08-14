@@ -1,19 +1,18 @@
 from exchanges import exchangepool
 from exchanges import bitruexc
 from exchanges import kucoinxc
+from exchanges import exchange
+# from utils import mycoroutine
 
 import re
 import time
 import requests
+import asyncio
 
-def main():
+async def main():
     exchangePool = exchangepool.ExchangePool({'kucoin': 0})
-    exchangePool.add_exchange('bitrue', bitruexc.BitrueExchange())
-    exchangePool.add_exchange('kucoin', kucoinxc.KucoinExchange())
-
-    response = exchangePool.get_exchanges()['kucoin'].getSymbolInfo('BNB-BTC')
-    print(response)
-
+    exchangePool.addExchange('bitrue', bitruexc.BitrueExchange())
+    exchangePool.addExchange('kucoin', kucoinxc.KucoinExchange())
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())

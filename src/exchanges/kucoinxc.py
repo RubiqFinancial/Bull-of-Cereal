@@ -1,3 +1,5 @@
+from exchanges import exchange
+
 import hashlib
 import hmac
 import base64
@@ -5,13 +7,13 @@ import requests
 import re
 import time
 
-class KucoinExchange:
+class KucoinExchange(exchange.Exchange):
 
     def __init__(self):
-        self.namestr = 'Kucoin'
-        self._url = 'https://api.kucoin.com/api/v1/'
+        self._setName('Kucoin')
+        self._setUrl('https://api.kucoin.com/api/v1/')
 
-    def _responseOk(self, response: results.Response) -> bool:
+    def _responseOk(self, response: requests.Response) -> bool:
         if response == None:
             return False
 
@@ -30,11 +32,11 @@ class KucoinExchange:
                 fstr
         )
         for match in matches:
-            if match[0].lower() == self.namestr.lower():
+            if match[0].lower() == self.getName().lower():
                 # we have api info in the cfg file
                 return match
 
-        print('ERROR: API key for \'' + self.namestr + '\' exchange not found in secrets.cfg.')
+        print('ERROR: API key for \'' + self.getName() + '\' exchange not found in secrets.cfg.')
         return None
 
     # private helper methods
@@ -62,7 +64,7 @@ class KucoinExchange:
     # api methods
     def getSymbols(self) -> dict:
         endpoint = 'symbols'
-        response = requests.get(self._url + endpoint)
+        response = requests.get(self.getUrl() + endpoint)
         if not self._responseOk(response):
             return None
 
@@ -71,19 +73,19 @@ class KucoinExchange:
     def getTime(self) -> dict:
         endpoint = 'timestamp'
         # this server reports UTC time
-        time = {'timezone': 'UTC'}
-        timeResponse = requests.get(self._url + endpoint)
-        if not self._responseOk(timeResponse):
+        time = {}
+        response = requests.get(self.getUrl() + endpoint)
+        if not self._responseOk(response):
             return None
 
-        time['serverTime'] = timeResponse.json()['data']
+        time['serverTime'] = response.json()['data']
         return time
 
-    def getSymbolInfo(self, symbol: str) -> dict:
+    async def getSymbolInfo(self, symbol: str) -> dict:
         endpoint = 'market/orderbook/level1'
         param = '?symbol=' + symbol
 
-        response = requests.get(self._url + endpoint + param)
+        response = requests.get(self.getUrl() + endpoint + param)
         if not self._responseOk(response):
             return None
 
@@ -97,7 +99,7 @@ class KucoinExchange:
         headers = self._formatRequestHeaders(endpoint)
         if headers == None:
             return None
-        response = requests.request('get', self._url + endpoint, headers=headers)
+        response = requests.request('get', self.getUrl() + endpoint, headers=headers)
         if not self._responseOk(response):
             return None
 
@@ -108,7 +110,7 @@ class KucoinExchange:
         headers = self._formatRequestHeaders(endpoint)
         if headers == None:
             return None
-        response = requests.request('get', self._url + endpoint, headers=headers)
+        response = requests.request('get', self.getUrl() + endpoint, headers=headers)
         if not self._responseOk(response):
             return None
 

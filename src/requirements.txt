@@ -1,0 +1,6 @@
+requests
+asyncio
+hmac
+base64
+hashlib
+flask

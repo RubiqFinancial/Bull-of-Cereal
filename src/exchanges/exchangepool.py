@@ -1,20 +1,20 @@
+from exchanges import exchange
+
 class ExchangePool:
-    # a data structure that keeps track of all coin exchanges
 
     def __init__(self, exchanges={}):
         self._exchanges = exchanges
 
-    def add_exchange(self, name, exchange):
+    def addExchange(self, name: str, exchange: exchange.Exchange):
         self._exchanges[name] = exchange;
 
-    def remove_exchange(self, exchangeName):
+    def removeExchange(self, exchangeName: str):
         if exchangeName in self._exchanges:
             del self._exchanges[exchangeName]
 
-    def get_exchanges(self):
+    def getExchanges(self) -> dict:
         return self._exchanges
 
-    def queryAllExchanges(self):
-        if len(self._exchanges) == 0:
-            print('ERROR: No exchanges listed.')
-            return
+    async def compareExchangePrices(symbol: str, exchanges={}) -> dict:
+        if not bool(exchanges):
+            exchanges = self._exchanges
