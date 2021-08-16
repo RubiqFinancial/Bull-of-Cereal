@@ -4,3 +4,4 @@ hmac
 base64
 hashlib
 flask
+tradingview_ta (MIT)

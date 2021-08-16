@@ -1,12 +1,12 @@
-from exchanges import exchange
+import exchange
 
 import requests
 
 class BitrueExchange(exchange.Exchange):
 
     def __init__(self):
-        self._setName('Bitrue')
-        self._setUrl('https://www.bitrue.com/api/v1/')
+        self.setName('Bitrue')
+        self.setUrl('https://www.bitrue.com/api/v1/')
 
     def _responseOk(self, response) -> bool:
         if response == None:
@@ -23,7 +23,7 @@ class BitrueExchange(exchange.Exchange):
     def getSymbols(self) -> dict:
         pass
 
-    def getTime(self) -> dict:
+    async def getTime(self) -> dict:
         endpoint = 'time'
         # this server reports UTC time
         response = requests.get(self.getUrl() + endpoint)

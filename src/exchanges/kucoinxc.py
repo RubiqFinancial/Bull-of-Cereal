@@ -1,4 +1,4 @@
-from exchanges import exchange
+import exchange
 
 import hashlib
 import hmac
@@ -10,8 +10,8 @@ import time
 class KucoinExchange(exchange.Exchange):
 
     def __init__(self):
-        self._setName('Kucoin')
-        self._setUrl('https://api.kucoin.com/api/v1/')
+        self.setName('Kucoin')
+        self.setUrl('https://api.kucoin.com/api/v1/')
 
     def _responseOk(self, response: requests.Response) -> bool:
         if response == None:
@@ -70,7 +70,7 @@ class KucoinExchange(exchange.Exchange):
 
         return response.json()
 
-    def getTime(self) -> dict:
+    async def getTime(self) -> dict:
         endpoint = 'timestamp'
         # this server reports UTC time
         time = {}

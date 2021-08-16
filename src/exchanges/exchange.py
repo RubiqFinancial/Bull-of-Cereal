@@ -4,6 +4,13 @@ class Exchange:
         self._namestr = None
         self._url = None
 
+    def __eq__(self, obj):
+        if (type(obj) is type(self)):
+            if (obj.getName() == self.getName()):
+                if (obj.getUrl() == self.getUrl()):
+                    return True
+        return False
+
     def setUrl(self, url):
         self._url = url
 

@@ -1,20 +1,29 @@
-from exchanges import exchange
+import exchange
 
 class ExchangePool:
 
-    def __init__(self, exchanges={}):
+    def __init__(self, exchanges=[]):
         self._exchanges = exchanges
 
-    def addExchange(self, name: str, exchange: exchange.Exchange):
-        self._exchanges[name] = exchange;
+    def addExchange(self, exchange: exchange.Exchange):
+        self._exchanges.append(exchange)
 
-    def removeExchange(self, exchangeName: str):
+    def removeExchange(self, exchangeName: str) -> bool:
         if exchangeName in self._exchanges:
             del self._exchanges[exchangeName]
+            return True
+        return False
 
-    def getExchanges(self) -> dict:
+    def getExchanges(self) -> list:
         return self._exchanges
 
-    async def compareExchangePrices(symbol: str, exchanges={}) -> dict:
+    def getExchange(self, exchange: str) -> exchange.Exchange:
+        for xc in self._exchanges:
+            if xc.getName().lower() == exchange.lower():
+                return xc
+
+        return None
+
+    async def compareExchangePrices(symbol: str, exchanges=[]) -> dict:
         if not bool(exchanges):
             exchanges = self._exchanges
