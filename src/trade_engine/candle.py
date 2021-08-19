@@ -7,6 +7,15 @@ class Candle:
         self.low = 0.0
         self.close = 0.0
 
+    def getJson(self) -> dict:
+        return {
+            'interval': self.interval,
+            'open': self.open,
+            'high': self.high,
+            'low': self.low,
+            'close': self.close,
+        }
+
 
 class Interval:
 

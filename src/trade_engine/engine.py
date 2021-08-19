@@ -1,6 +1,7 @@
 from data_streams import autoview
 from data_streams import stream_publisher as sp
-from exchanges import exchange
+from exchanges.exchange import Exchange
+from trade_engine.coin import Coin
 import json
 import time
 import threading
@@ -8,9 +9,14 @@ import threading
 class TradeEngine(sp.StreamPublisher):
 
     def __init__(self, *streams):
-        self.monitoredCoins = {}
+        self.monitoredCoins = [
+            Coin('btc', 'usdt', Exchange.KUCOIN),
+            Coin('eth', 'usdt', Exchange.KUCOIN)
+        ]
+        print(self.monitoredCoins[0])
         self._dataStreams = list(streams)
         self._dataMap = {}
+
         for stream in self._dataStreams:
             self._dataMap[stream.name] = {}
             stream.subscribe(self)

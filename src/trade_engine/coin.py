@@ -27,7 +27,23 @@ class Coin:
         return f'{self.getJson()}'
 
     def getJson(self) -> dict:
-        pass
-
-if __name__ == '__main__':
-    coin = Coin('btc', 'usdt', 'kucoin')
+        return {
+            'base': self.base,
+            'quote': self.quote,
+            'exchange': self.exchange,
+            'price': self.price,
+            'volume': self.volume,
+            'priceChange': self.priceChange,
+            'volumeChange': self.volumeChange,
+            'rating': self.rating,
+            'candles': {
+                candle.Interval.ONE_MINUTE: self.candles[0].getJson(),
+                candle.Interval.FIFTEEN_MINUTE: self.candles[1].getJson(),
+                candle.Interval.ONE_HOUR: self.candles[2].getJson()
+            },
+            'ema5': self.ema5,
+            'ema13': self.ema13,
+            'ema50': self.ema50,
+            'ema200': self.ema200,
+            'ema800': self.ema800
+        }
