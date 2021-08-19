@@ -29,10 +29,10 @@ class Exchange:
             print('There was a problem sending the request ({:s}) ({:d}).'.format(response.url, response.status_code))
             return False
 
-    def setUrl(self, url):
+    def setUrl(self, url: str):
         self._url = url
 
-    def setName(self, name):
+    def setName(self, name: str):
         self._namestr = name
 
     def getUrl(self):

@@ -8,10 +8,10 @@ class StreamPublisher:
         self._subscribers = []
         pass
 
-    def subscribe(self, subscriber: ss.StreamSubscriber):
+    def addSubscriber(self, subscriber: ss.StreamSubscriber):
         pass
 
-    def unsubscribe(self, subscriber: ss.StreamSubscriber):
+    def removeSsubscriber(self, subscriber: ss.StreamSubscriber):
         pass
 
     def notify(self):

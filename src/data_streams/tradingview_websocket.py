@@ -34,18 +34,6 @@ class TradingViewWebSocket:
         except AttributeError:
             print("error")
 
-    def _generateAuthToken(self):
-        signInUrl = 'https://www.tradingview.com/accounts/signin/'
-        username = 'RubiqFinancial'
-        password = 't6u!A$I%fGh!'
-        data = {"username": username, "password": password, "remember": "on"}
-        headers = {
-            'Referer': 'https://www.tradingview.com'
-        }
-        response = requests.post(url=signInUrl, data=data, headers=headers)
-        print(response.json())
-        # return authToken
-
     # generates session id string
     def _generateSession(self):
         stringLength = 12
@@ -129,26 +117,26 @@ class TradingViewWebSocket:
 
         return ws
 
-def on_message(ws, message):
-    if 'lp' in message:
-        p = message.split('~', -1)[4]
-        data = json.loads(p)
-        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-        symbol = data['p'][1]['n']
-        ltp = data['p'][1]['v']['lp']
-        volume = data['p'][1]['v']['volume']
-        chp = '0'
-        if 'chp' in message:
-            chp = data['p'][1]['v']['chp']
-
-        if symbol.upper() == symbol:
-            print(
-                f'tick :timestamp: {timestamp} :symbol: {symbol} :last_price: {ltp} :chp: {chp}% :volume: {volume}')
-    # print(message)
-
-if __name__ == '__main__':
-
-    tvws = TradingViewWebsocket(['KUCOIN:BTCUSDT', 'KUCOIN:ETHUSDT'], fields)
-    ws = tvws.createWebSocket()
-    # ws = tvws.createWebSocket(on_message=on_message, on_error=on_error)
-    ws.run_forever()
+# def on_message(ws, message):
+#     if 'lp' in message:
+#         p = message.split('~', -1)[4]
+#         data = json.loads(p)
+#         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+#         symbol = data['p'][1]['n']
+#         ltp = data['p'][1]['v']['lp']
+#         volume = data['p'][1]['v']['volume']
+#         chp = '0'
+#         if 'chp' in message:
+#             chp = data['p'][1]['v']['chp']
+#
+#         if symbol.upper() == symbol:
+#             print(
+#                 f'tick :timestamp: {timestamp} :symbol: {symbol} :last_price: {ltp} :chp: {chp}% :volume: {volume}')
+#     # print(message)
+#
+# if __name__ == '__main__':
+#
+#     tvws = TradingViewWebsocket(['KUCOIN:BTCUSDT', 'KUCOIN:ETHUSDT'], fields)
+#     ws = tvws.createWebSocket()
+#     # ws = tvws.createWebSocket(on_message=on_message, on_error=on_error)
+#     ws.run_forever()

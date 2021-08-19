@@ -1,5 +1,6 @@
 from data_streams import stream_publisher as sp
 from data_streams import stream_subscriber as ss
+import threading
 
 class AutoView(sp.StreamPublisher):
 
@@ -8,16 +9,17 @@ class AutoView(sp.StreamPublisher):
         self.name = 'AutoView'
         self._data = {'stream': self.name}
 
-    def subscribe(self, subscriber: ss.StreamSubscriber):
+    def addSubscriber(self, subscriber: ss.StreamSubscriber):
         self._subscribers.append(subscriber)
 
-    def unsubscribe(self, subscriber: ss.StreamSubscriber):
+    def removeSubscriber(self, subscriber: ss.StreamSubscriber):
         self._subscribers.remove(subscriber)
 
     def notify(self):
         for subscriber in self._subscribers:
-            subscriber.update(self._data) # implement update as a new thread
+            subscriber.update(self._data)
 
+    # must invoke as daemon thread
     def setData(self, newData: dict):
         newKeys = list(newData)
         for key in newKeys:

@@ -1,7 +1,7 @@
 class Candle:
 
     def __init__(self, interval: str):
-        self.interval = None
+        self.interval = interval
         self.open = 0.0
         self.high = 0.0
         self.low = 0.0

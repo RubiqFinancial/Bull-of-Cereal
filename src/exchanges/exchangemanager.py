@@ -3,7 +3,7 @@ from exchanges import exchange, kucoinxc, bitruexc, exchangepool
 class ExchangeManager:
 
     def __init__(self):
-        self._exchangePool = exchangepool.ExchangePool([
+        self._exchangePool = exchangepool.ExchangePool([ # change exchange pool constructor to use *args notation
             kucoinxc.KucoinExchange(),
             bitruexc.BitrueExchange()
         ])

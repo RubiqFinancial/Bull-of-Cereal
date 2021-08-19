@@ -1,39 +1,50 @@
-from data_streams import autoview
-from data_streams import stream_publisher as sp
+from data_streams import autoview, volumestream
+from data_streams import stream_subscriber as ss
 from exchanges.exchange import Exchange
 from trade_engine.coin import Coin
+from trade_engine import candle
 import json
 import time
 import threading
 
-class TradeEngine(sp.StreamPublisher):
+class TradeEngine(ss.StreamSubscriber):
 
-    def __init__(self, *streams):
+    def __init__(self):
         self.monitoredCoins = [
-            Coin('btc', 'usdt', Exchange.KUCOIN),
-            Coin('eth', 'usdt', Exchange.KUCOIN)
+            Coin(Coin.BTC, Coin.USDT, Exchange.KUCOIN),
+            Coin(Coin.ETH, Coin.USDT, Exchange.KUCOIN)
         ]
-        print(self.monitoredCoins[0])
-        self._dataStreams = list(streams)
+        # print(self.monitoredCoins[0].candles[candle.Interval.FIFTEEN_MINUTE].high)
+        self._dataStreams = []
         self._dataMap = {}
 
-        for stream in self._dataStreams:
+    def addPublishers(self, *publishers):
+        for stream in publishers:
             self._dataMap[stream.name] = {}
-            stream.subscribe(self)
+            stream.addSubscriber(self)
 
-    def _constructSymbols(self):
-        pass
-
-    def update(self, data: dict): # this will be implemented as a thread
+    # This method should be called as a thread because it is not thread safe
+    # and could be called by another publisher
+    def update(self, data: dict):
+        # TODO: implement mutex locking here
         print(f'data to update {data}')
         self._runAnalysis()
+        # mutex unlocks here.  unlocking before could mess up shared data
+        # for the analysis
 
     def _runAnalysis(self):
         pass
 
+    def isMonitoredCoin(self, coin: Coin) -> bool:
+        pass
+
 if __name__ == '__main__':
     # pretend api
+    te = TradeEngine()
     av = autoview.AutoView()
-    te = TradeEngine(av)
+    vm = volumestream.VolumeStream(te.monitoredCoins)
+    te.addPublishers(av, vm)
 
-    av.setData({'message': 'hello, world!'});
+    avThread = threading.Thread(target=av.setData({'message': 'hello, world!'}), daemon=True)
+    vm.stream() # automatically creates thread
+    avThread.start()
