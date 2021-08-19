@@ -1,4 +1,4 @@
-import exchange
+from exchanges import exchange
 
 class ExchangePool:
 

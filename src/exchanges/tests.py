@@ -1,4 +1,4 @@
-import bitruexc, kucoinxc, exchange, exchangemanager, exchangepool
+from exchanges import bitruexc, kucoinxc, exchange, exchangemanager, exchangepool
 
 import re
 import time

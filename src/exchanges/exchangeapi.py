@@ -1,34 +1,27 @@
 from flask import Flask
-import exchangemanager
-import asyncio
+from flask_restful import Resource, Api, reqparse
+from exchanges import exchangemanager
+import pandas as pd
 
 app = Flask(__name__)
-xcManager = exchangemanager.ExchangeManager()
+api = Api(app)
 
-@app.route('/api/')
-def index():
-    return 'Bull of Cereal private API home'
+class Exchanges(Resource):
+    def get(self):
+        return {'exchange_name': 'exchange'}, 200
 
-@app.route('/api/exchanges')
-async def getExchanges() -> dict:
-    exchanges = xcManager.getExchanges()
+class Alerts(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('msg', required=False, type=str)
+        args = parser.parse_args()
+        print(args)
 
-    rjson = {}
-    coroutines = []
+        return {'r': 'ack'}, 200
 
-    for exchange in exchanges:
-        coroutines.append(exchange.getTime())
 
-    result = await asyncio.gather(*coroutines)
-
-    for i in range(0, len(exchanges)):
-        rjson[exchanges[i].getName()] = result[i]
-
-    return rjson
-
-@app.route('/api/exchanges/trade')
-async def makeTrade() -> dict:
-    return 'this endpoint should be used to trade'
+api.add_resource(Exchanges, '/api/exchanges')
+api.add_resource(Alerts, '/api/alerts')
 
 if __name__ == '__main__':
-    asyncio.run(app.run(debug=True))
+    app.run(debug=True)

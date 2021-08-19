@@ -1,4 +1,4 @@
-import exchange
+from exchanges import exchange
 
 import requests
 
@@ -7,18 +7,6 @@ class BitrueExchange(exchange.Exchange):
     def __init__(self):
         self.setName('Bitrue')
         self.setUrl('https://www.bitrue.com/api/v1/')
-
-    def _responseOk(self, response) -> bool:
-        if response == None:
-            return False
-
-        if response.status_code == 200:
-            # check for json response
-            # check for return code of 20000 in json
-            return True
-        else:
-            print('There was a problem sending the request ({:s}) ({:d}).'.format(response.url, response.status_code))
-            return False
 
     def getSymbols(self) -> dict:
         pass

@@ -146,9 +146,9 @@ def on_message(ws, message):
                 f'tick :timestamp: {timestamp} :symbol: {symbol} :last_price: {ltp} :chp: {chp}% :volume: {volume}')
     # print(message)
 
-# if __name__ == '__main__':
-#
-#     tvws = TradingViewWebsocket(['KUCOIN:BTCUSDT', 'KUCOIN:ETHUSDT'], fields)
-#     ws = tvws.createWebSocket()
-#     # ws = tvws.createWebSocket(on_message=on_message, on_error=on_error)
-#     ws.run_forever()
+if __name__ == '__main__':
+
+    tvws = TradingViewWebsocket(['KUCOIN:BTCUSDT', 'KUCOIN:ETHUSDT'], fields)
+    ws = tvws.createWebSocket()
+    # ws = tvws.createWebSocket(on_message=on_message, on_error=on_error)
+    ws.run_forever()

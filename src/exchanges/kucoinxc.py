@@ -1,4 +1,4 @@
-import exchange
+from exchanges import exchange
 
 import hashlib
 import hmac
@@ -12,18 +12,6 @@ class KucoinExchange(exchange.Exchange):
     def __init__(self):
         self.setName('Kucoin')
         self.setUrl('https://api.kucoin.com/api/v1/')
-
-    def _responseOk(self, response: requests.Response) -> bool:
-        if response == None:
-            return False
-
-        if response.status_code == 200:
-            # check for json response
-            # check for return code of 20000 in json
-            return True
-        else:
-            print('There was a problem sending the request ({:s}) ({:d}).'.format(response.url, response.status_code))
-            return False
 
     def _getApiInfo(self):
         fstr = open('secrets.cfg', 'r').read()
@@ -81,7 +69,7 @@ class KucoinExchange(exchange.Exchange):
         time['serverTime'] = response.json()['data']
         return time
 
-    async def getSymbolInfo(self, symbol: str) -> dict:
+    def getSymbolInfo(self, symbol: str) -> dict:
         endpoint = 'market/orderbook/level1'
         param = '?symbol=' + symbol
 

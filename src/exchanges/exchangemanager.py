@@ -1,4 +1,4 @@
-import exchange, kucoinxc, bitruexc, exchangepool
+from exchanges import exchange, kucoinxc, bitruexc, exchangepool
 
 class ExchangeManager:
 
