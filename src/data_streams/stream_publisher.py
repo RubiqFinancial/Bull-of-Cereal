@@ -1,4 +1,4 @@
-from stream_subscriber import StreamSubscriber
+from data_streams import stream_subscriber as ss
 
 class StreamPublisher:
 
@@ -8,10 +8,10 @@ class StreamPublisher:
         self._subscribers = []
         pass
 
-    def subscribe(self, subscriber: StreamSubscriber):
+    def subscribe(self, subscriber: ss.StreamSubscriber):
         pass
 
-    def unsubscribe(self, subscriber: StreamSubscriber):
+    def unsubscribe(self, subscriber: ss.StreamSubscriber):
         pass
 
     def notify(self):
