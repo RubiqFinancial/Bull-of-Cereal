@@ -45,6 +45,6 @@ if __name__ == '__main__':
     vm = volumestream.VolumeStream(te.monitoredCoins)
     te.addPublishers(av, vm)
 
-    avThread = threading.Thread(target=av.setData({'message': 'hello, world!'}), daemon=True)
+    # avThread = threading.Thread(target=av.setData({'message': 'hello, world!'}), daemon=True)
     vm.stream() # automatically creates thread
-    avThread.start()
+    # avThread.start()

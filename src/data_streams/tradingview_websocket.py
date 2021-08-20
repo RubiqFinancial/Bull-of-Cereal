@@ -1,6 +1,7 @@
 # Author: Michael Lauderback
 # references work from https://gist.github.com/algo2t/34f4462f6e8670249f7c58545eb83db4
-
+from trade_engine import coin, candle
+from exchanges import exchange
 import websocket
 import time
 import threading
@@ -12,11 +13,6 @@ import asyncio
 import requests
 
 class TradingViewWebSocket:
-
-    # fields = ["ch", "chp", "current_session", "description", "local_description",
-    #  "language", "exchange", "fractional", "is_tradable", "lp", "lp_time", "minmov",
-    #  "minmove2","original_name", "pricescale", "pro_name", "short_name", "type",
-    #  "update_mode", "volume","rchp", "rtc", "rtc_time", "currency_code"]
 
     def __init__(self, symbols, fields):
         self._SOCKET = 'wss://data.tradingview.com/socket.io/websocket'
@@ -65,7 +61,7 @@ class TradingViewWebSocket:
     # sends message through websocket
     def _sendMessage(self, ws, func, args):
         ws.send(self._createMessage(func, args))
-        print(self._createMessage(func, args))
+        # print(self._createMessage(func, args))
 
     def on_message(self, ws, message):
         print(message)
@@ -74,17 +70,17 @@ class TradingViewWebSocket:
         print(error)
 
     def on_close(self, ws, close_status_code, close_msg):
-        print("Connection closed.")
+        print('connection closed')
 
     # ~m~82~m~{"m":"create_series","p":["cs_b2EjbnYrDjOY","sds_1","s1","sds_sym_1","1W",300,""]}
     def on_open(self, ws):
         print('Opened new connection.')
 
         session = self._generateSession()
-        print(f"session generated {session}")
+        # print(f"session generated {session}")
 
         chart_session = self._generateChartSession()
-        print("chart_session generated {}".format(chart_session))
+        # print("chart_session generated {}".format(chart_session))
 
         # token = self._generateAuthToken()
         # self._sendMessage(ws, "set_auth_token", [token]) # set connection permissions
@@ -104,39 +100,16 @@ class TradingViewWebSocket:
         self._sendMessage(ws, "quote_add_symbols", pSymbols)
 
 
-    def createWebSocket(self, on_message=None, on_error=None):
-        on_message=self.on_message if on_message == None else on_message
-        on_error=self.on_error if on_error == None else on_error
+    def createWebSocket(self, on_message=None, on_error=None, on_close=None):
+        on_message = self.on_message if on_message == None else on_message
+        on_error = self.on_error if on_error == None else on_error
+        on_close = self.on_close if on_close == None else on_close
 
         websocket.enableTrace(False)
         ws = websocket.WebSocketApp(self._SOCKET,
                               on_open=self.on_open,
                               on_message=on_message,
                               on_error=on_error,
-                              on_close=self.on_close)
+                              on_close=on_close)
 
         return ws
-
-# def on_message(ws, message):
-#     if 'lp' in message:
-#         p = message.split('~', -1)[4]
-#         data = json.loads(p)
-#         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-#         symbol = data['p'][1]['n']
-#         ltp = data['p'][1]['v']['lp']
-#         volume = data['p'][1]['v']['volume']
-#         chp = '0'
-#         if 'chp' in message:
-#             chp = data['p'][1]['v']['chp']
-#
-#         if symbol.upper() == symbol:
-#             print(
-#                 f'tick :timestamp: {timestamp} :symbol: {symbol} :last_price: {ltp} :chp: {chp}% :volume: {volume}')
-#     # print(message)
-#
-# if __name__ == '__main__':
-#
-#     tvws = TradingViewWebsocket(['KUCOIN:BTCUSDT', 'KUCOIN:ETHUSDT'], fields)
-#     ws = tvws.createWebSocket()
-#     # ws = tvws.createWebSocket(on_message=on_message, on_error=on_error)
-#     ws.run_forever()
