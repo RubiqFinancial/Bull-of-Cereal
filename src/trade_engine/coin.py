@@ -61,4 +61,4 @@ class Coin:
         }
 
     def get_symbol_string(self) -> str:
-        return f'{self.base.value}:{self.quote.value}'
+        return f'{self.exchange.value}:{self.base.value}{self.quote.value}'

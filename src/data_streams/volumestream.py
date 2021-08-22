@@ -14,13 +14,10 @@ class VolumeStream(sp.StreamPublisher):
         self.symbols = []
         self._last_message = {}
         self.web_socket = None
-
-        # adjust coin symbol for the websocket params
-        for coin in monitored_coins:
-            name = coin.get_symbol().replace(':','')
-            self.symbols.append(f'{coin.exchange}:{name}')
+        self.symbols = [coin.get_symbol_string() for coin in monitored_coins]
 
         self.fields = ['volume']
+        print(self.symbols)
         # self.fields = ["ch", "chp", "current_session", "description", "local_description",
         #      "language", "exchange", "fractional", "is_tradable", "lp", "lp_time", "minmov",
         #      "minmove2","original_name", "pricescale", "pro_name", "short_name", "type",
@@ -82,3 +79,4 @@ class VolumeStream(sp.StreamPublisher):
 
     def restart_stream(self):
         self.web_socket.close()
+        self.init_stream()

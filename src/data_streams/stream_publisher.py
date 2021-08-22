@@ -20,3 +20,7 @@ class StreamPublisher:
     @abstractmethod
     def notify(self):
         pass
+
+    @abstractmethod
+    def set_data(self, data: dict):
+        pass

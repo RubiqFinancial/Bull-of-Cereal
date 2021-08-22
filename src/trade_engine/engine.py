@@ -40,10 +40,11 @@ class TradeEngine(ss.StreamSubscriber):
 if __name__ == '__main__':
     # pretend api
     te = TradeEngine()
-    av = autoview.AutoView()
+    av = autoview.Autoview()
     vm = volumestream.VolumeStream(te.monitored_coins)
     te.add_publishers(av, vm)
 
     # avThread = threading.Thread(target=av.setData({'message': 'hello, world!'}), daemon=True)
-    vm.init_stream() # automatically creates thread
     # avThread.start()
+    vmThread = threading.Thread(target=vm.init_stream(), daemon=True)
+    vmThread.start()

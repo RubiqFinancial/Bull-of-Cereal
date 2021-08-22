@@ -58,7 +58,7 @@ class TestCoin(unittest.TestCase):
 
     def test_coin_get_symbol_string(self):
         test_coin = coin.Coin(coin.Currency.BTC, coin.Currency.USDT, exchange.ExchangeName.KUCOIN)
-        self.assertEqual(test_coin.get_symbol_string(), 'BTC:USDT')
+        self.assertEqual(test_coin.get_symbol_string(), 'Kucoin:BTCUSDT')
 
 class TestCandles(unittest.TestCase):
 
