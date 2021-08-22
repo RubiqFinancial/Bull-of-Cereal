@@ -1,23 +1,26 @@
 import requests
+from enum import Enum
 
-class Exchange:
-
+class ExchangeName(Enum):
     KUCOIN = 'Kucoin'
     BITRUE = 'Bitrue'
     BYBIT = 'Bybit'
 
+
+class Exchange:
+
     def __init__(self):
-        self._namestr = None
+        self._name = None
         self._url = None
 
     def __eq__(self, obj):
         if (type(obj) is type(self)):
-            if (obj.getName() == self.getName()):
-                if (obj.getUrl() == self.getUrl()):
+            if (obj.get_name() == self.get_name()):
+                if (obj.get_url() == self.get_url()):
                     return True
         return False
 
-    def _responseOk(self, response: requests.Response) -> bool:
+    def _response_ok(self, response: requests.Response) -> bool:
         if response == None:
             return False
 
@@ -29,14 +32,16 @@ class Exchange:
             print('There was a problem sending the request ({:s}) ({:d}).'.format(response.url, response.status_code))
             return False
 
-    def setUrl(self, url: str):
+    def set_url(self, url: str):
         self._url = url
 
-    def setName(self, name: str):
-        self._namestr = name
+    def set_name(self, name):
+        if (type(name) != ExchangeName):
+            raise TypeError('name must be of type \'ExchangeName\'')
+        self._name = name
 
-    def getUrl(self):
+    def get_url(self) -> str:
         return self._url
 
-    def getName(self):
-        return self._namestr
+    def get_name(self) -> ExchangeName:
+        return self._name

@@ -5,25 +5,25 @@ class ExchangePool:
     def __init__(self, exchanges=[]):
         self._exchanges = exchanges
 
-    def addExchange(self, exchange: exchange.Exchange):
+    def add_exchange(self, exchange: exchange.Exchange):
         self._exchanges.append(exchange)
 
-    def removeExchange(self, exchangeName: str) -> bool:
-        if exchangeName in self._exchanges:
-            del self._exchanges[exchangeName]
+    def remove_exchange(self, exchange_name: exchange.ExchangeName) -> bool:
+        if exchange_name.name in self._exchanges:
+            del self._exchanges[exchange_name]
             return True
         return False
 
-    def getExchanges(self) -> list:
+    def get_exchanges(self) -> list:
         return self._exchanges
 
-    def getExchange(self, exchange: str) -> exchange.Exchange:
+    def get_exchange(self, exchange_name: exchange.ExchangeName) -> exchange.Exchange:
         for xc in self._exchanges:
-            if xc.getName().lower() == exchange.lower():
+            if xc.get_name() == exchange_name:
                 return xc
 
         return None
 
-    async def compareExchangePrices(symbol: str, exchanges=[]) -> dict:
+    async def compare_exchange_prices(symbol: str, exchanges=[]) -> dict:
         if not bool(exchanges):
             exchanges = self._exchanges

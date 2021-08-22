@@ -1,4 +1,5 @@
 from data_streams import stream_subscriber as ss
+from abc import abstractmethod
 
 class StreamPublisher:
 
@@ -8,11 +9,14 @@ class StreamPublisher:
         self._subscribers = []
         pass
 
-    def addSubscriber(self, subscriber: ss.StreamSubscriber):
+    @abstractmethod
+    def add_subscriber(self, subscriber: ss.StreamSubscriber):
         pass
 
-    def removeSsubscriber(self, subscriber: ss.StreamSubscriber):
+    @abstractmethod
+    def remove_subscriber(self, subscriber: ss.StreamSubscriber):
         pass
 
+    @abstractmethod
     def notify(self):
         pass

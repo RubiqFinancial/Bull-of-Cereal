@@ -15,10 +15,11 @@ import requests
 class TradingViewWebSocket:
 
     def __init__(self, symbols, fields):
-        self._SOCKET = 'wss://data.tradingview.com/socket.io/websocket'
+        self._socket = 'wss://data.tradingview.com/socket.io/websocket'
         self.symbols = symbols
-        self.quoteFields = fields;
-        self._websocketThread = None
+        # self.symbols = 'KUCOIN:BTCUSDT'
+        self.quote_fields = fields;
+        self._websocket_thread = None
 
     def filter_raw_message(self, text):
         try:
@@ -31,36 +32,36 @@ class TradingViewWebSocket:
             print("error")
 
     # generates session id string
-    def _generateSession(self):
-        stringLength = 12
+    def _generate_session(self):
+        string_length = 12
         letters = string.ascii_lowercase
-        random_string = ''.join(random.choice(letters) for i in range(stringLength))
+        random_string = ''.join(random.choice(letters) for i in range(string_length))
         return "qs_" + random_string
 
     # generates chart session id string
-    def _generateChartSession(self):
-        stringLength = 12
+    def _generate_chart_session(self):
+        string_length = 12
         letters = string.ascii_lowercase
-        random_string = ''.join(random.choice(letters) for i in range(stringLength))
+        random_string = ''.join(random.choice(letters) for i in range(string_length))
         return "cs_" + random_string
 
-    def _prependHeader(self, st):
+    def _prepend_header(self, st):
         return "~m~" + str(len(st)) + "~m~" + st
 
-    def _constructMessage(self, func, paramList):
+    def _construct_message(self, func, param_list):
         #json_mylist = json.dumps(mylist, separators=(',', ':'))
         return json.dumps({
             "m": func,
-            "p": paramList
+            "p": param_list
         }, separators=(',', ':'))
 
     # creates message to be sent through websocket
-    def _createMessage(self, func, paramList):
-        return self._prependHeader(self._constructMessage(func, paramList))
+    def _create_message(self, func, param_list):
+        return self._prepend_header(self._construct_message(func, param_list))
 
     # sends message through websocket
-    def _sendMessage(self, ws, func, args):
-        ws.send(self._createMessage(func, args))
+    def _send_message(self, ws, func, args):
+        ws.send(self._create_message(func, args))
         # print(self._createMessage(func, args))
 
     def on_message(self, ws, message):
@@ -76,40 +77,43 @@ class TradingViewWebSocket:
     def on_open(self, ws):
         print('Opened new connection.')
 
-        session = self._generateSession()
+        session = self._generate_session()
         # print(f"session generated {session}")
 
-        chart_session = self._generateChartSession()
+        chart_session = self._generate_chart_session()
         # print("chart_session generated {}".format(chart_session))
 
-        # token = self._generateAuthToken()
-        # self._sendMessage(ws, "set_auth_token", [token]) # set connection permissions
-        # print(token)
-        self._sendMessage(ws, "set_auth_token", ['unauthorized_user_token'])
+        self._send_message(ws, "set_auth_token", ['unauthorized_user_token'])
 
-        self._sendMessage(ws, "chart_create_session", [chart_session]) # create a chart session stream
-        self._sendMessage(ws, "quote_create_session", [session]) # create a quote session stream
+        self._send_message(ws, "chart_create_session", [chart_session]) # create a chart session stream
+        self._send_message(ws, "quote_create_session", [session]) # create a quote session stream
         #
         # quote fields to be returned
-        fields = self.quoteFields.copy()
+        fields = self.quote_fields.copy()
         fields.insert(0, session)
-        self._sendMessage(ws, "quote_set_fields", fields)
+        self._send_message(ws, "quote_set_fields", fields)
 
-        pSymbols = self.symbols.copy()
-        pSymbols.insert(0, session)
-        self._sendMessage(ws, "quote_add_symbols", pSymbols)
+        p_symbols = self.symbols.copy()
+        # pSymbols = [self.symbols]
+        p_symbols.insert(0, session)
+        self._send_message(ws, "quote_add_symbols", p_symbols)
+        # print(self.symbols)
+
+        # self._sendMessage(ws, 'resolve_symbols', [chart_session, 'sds_sym1', self.symbols])
+        # ws.send('~m~144~m~{"m":"resolve_symbol","p":["cs_1fufbON7frBP","sds_sym_1","={\"symbol\":\"KUCOIN:BTCUSDT\",\"adjustment\":\"splits\",\"session\":\"extended\"}"]}')
+        # self._sendMessage(ws, 'create_series', [chart_session, 'sds_1', 's1', 'sds_sym1', '60', 300, ''])
 
 
-    def createWebSocket(self, on_message=None, on_error=None, on_close=None):
+    def create_web_socket(self, on_message=None, on_error=None, on_close=None):
         on_message = self.on_message if on_message == None else on_message
         on_error = self.on_error if on_error == None else on_error
         on_close = self.on_close if on_close == None else on_close
 
         websocket.enableTrace(False)
-        ws = websocket.WebSocketApp(self._SOCKET,
-                              on_open=self.on_open,
-                              on_message=on_message,
-                              on_error=on_error,
-                              on_close=on_close)
+        ws = websocket.WebSocketApp(self._socket,
+                                    on_open=self.on_open,
+                                    on_message=on_message,
+                                    on_error=on_error,
+                                    on_close=on_close)
 
         return ws

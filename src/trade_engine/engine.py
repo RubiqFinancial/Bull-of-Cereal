@@ -1,8 +1,7 @@
 from data_streams import autoview, volumestream
 from data_streams import stream_subscriber as ss
-from exchanges.exchange import Exchange
-from trade_engine.coin import Coin
-from trade_engine import candle
+from exchanges.exchange import Exchange, ExchangeName
+from trade_engine import candle, coin
 import json
 import time
 import threading
@@ -10,41 +9,41 @@ import threading
 class TradeEngine(ss.StreamSubscriber):
 
     def __init__(self):
-        self.monitoredCoins = [
-            Coin(Coin.BTC, Coin.USDT, Exchange.KUCOIN),
-            Coin(Coin.ETH, Coin.USDT, Exchange.KUCOIN)
+        self.monitored_coins = [
+            coin.Coin(coin.Currency.BTC, coin.Currency.USDT, ExchangeName.KUCOIN),
+            coin.Coin(coin.Currency.ETH, coin.Currency.USDT, ExchangeName.KUCOIN)
         ]
         # print(self.monitoredCoins[0].candles[candle.Interval.FIFTEEN_MINUTE].high)
-        self._dataStreams = []
-        self._dataMap = {}
+        self._data_streams = []
+        self._data_map = {}
 
-    def addPublishers(self, *publishers):
+    def add_publishers(self, *publishers):
         for stream in publishers:
-            self._dataMap[stream.name] = {}
-            stream.addSubscriber(self)
+            self._data_map[stream.name] = {}
+            stream.add_subscriber(self)
 
     # This method should be called as a thread because it is not thread safe
     # and could be called by another publisher
     def update(self, data: dict):
         # TODO: implement mutex locking here
         print(f'data to update {data}')
-        self._runAnalysis()
+        self._run_analysis()
         # mutex unlocks here.  unlocking before could mess up shared data
         # for the analysis
 
-    def _runAnalysis(self):
+    def _run_analysis(self):
         pass
 
-    def isMonitoredCoin(self, coin: Coin) -> bool:
+    def is_monitored_coin(self, coin: coin.Coin) -> bool:
         pass
 
 if __name__ == '__main__':
     # pretend api
     te = TradeEngine()
     av = autoview.AutoView()
-    vm = volumestream.VolumeStream(te.monitoredCoins)
-    te.addPublishers(av, vm)
+    vm = volumestream.VolumeStream(te.monitored_coins)
+    te.add_publishers(av, vm)
 
     # avThread = threading.Thread(target=av.setData({'message': 'hello, world!'}), daemon=True)
-    vm.stream() # automatically creates thread
+    vm.init_stream() # automatically creates thread
     # avThread.start()

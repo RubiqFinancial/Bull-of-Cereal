@@ -1,30 +1,31 @@
-from exchanges import exchange
+from exchanges.exchange import Exchange
+from exchanges.exchange import ExchangeName
 
 import requests
 
-class BitrueExchange(exchange.Exchange):
+class BitrueExchange(Exchange):
 
     def __init__(self):
-        self.setName('Bitrue')
-        self.setUrl('https://www.bitrue.com/api/v1/')
+        self.set_name(ExchangeName.BITRUE)
+        self.set_url('https://www.bitrue.com/api/v1/')
 
-    def getSymbols(self) -> dict:
+    def get_symbols(self) -> dict:
         pass
 
-    async def getTime(self) -> dict:
+    async def get_time(self) -> dict:
         endpoint = 'time'
         # this server reports UTC time
-        response = requests.get(self.getUrl() + endpoint)
-        if not self._responseOk(response):
+        response = requests.get(self.get_url() + endpoint)
+        if not self._response_ok(response):
             return None
 
         return response.json()
 
-    def getSymbolPrice(self, symbol) -> dict:
+    def get_symbol_price(self, symbol) -> dict:
         pass
 
-    def getHistoricalData(self, symbol, interval, start, limit) -> dict:
+    def get_historical_data(self, symbol, interval, start, limit) -> dict:
         pass
 
-    def getAccountInfo(self) -> dict:
+    def get_account_info(self) -> dict:
         pass

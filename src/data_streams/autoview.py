@@ -2,17 +2,17 @@ from data_streams import stream_publisher as sp
 from data_streams import stream_subscriber as ss
 import threading
 
-class AutoView(sp.StreamPublisher):
+class Autoview(sp.StreamPublisher):
 
     def __init__(self):
         super().__init__()
-        self.name = 'AutoView'
+        self.name = 'Autoview'
         self._data = {'stream': self.name}
 
-    def addSubscriber(self, subscriber: ss.StreamSubscriber):
+    def add_subscriber(self, subscriber: ss.StreamSubscriber):
         self._subscribers.append(subscriber)
 
-    def removeSubscriber(self, subscriber: ss.StreamSubscriber):
+    def remove_subscriber(self, subscriber: ss.StreamSubscriber):
         self._subscribers.remove(subscriber)
 
     def notify(self):
@@ -20,9 +20,9 @@ class AutoView(sp.StreamPublisher):
             subscriber.update(self._data)
 
     # must invoke as daemon thread
-    def setData(self, newData: dict):
-        newKeys = list(newData)
-        for key in newKeys:
-            self._data[key] = newData[key]
+    def set_data(self, new_data: dict):
+        new_keys = list(new_data)
+        for key in new_keys:
+            self._data[key] = new_data[key]
 
         self.notify()

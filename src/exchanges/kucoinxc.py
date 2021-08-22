@@ -1,4 +1,5 @@
-from exchanges import exchange
+from exchanges.exchange import Exchange
+from exchanges.exchange import ExchangeName
 
 import hashlib
 import hmac
@@ -7,34 +8,34 @@ import requests
 import re
 import time
 
-class KucoinExchange(exchange.Exchange):
+class KucoinExchange(Exchange):
 
     def __init__(self):
-        self.setName('Kucoin')
-        self.setUrl('https://api.kucoin.com/api/v1/')
+        self.set_name(ExchangeName.KUCOIN)
+        self.set_url('https://api.kucoin.com/api/v1/')
 
-    def _getApiInfo(self):
+    def _get_api_info(self):
         fstr = open('secrets.cfg', 'r').read()
         matches = re.findall(
                 r'\s*<exchange\s*name=\"([a-zZ-z]+)\">\n\s*<api_key>([0-9a-f]+)</api_key>\n\s*<api_secret>([0-9a-f-]+)</api_secret>\n\s*<api_passphrase>(.*)</api_passphrase>\n\s*</exchange>',
                 fstr
         )
         for match in matches:
-            if match[0].lower() == self.getName().lower():
+            if match[0].lower() == self.get_name().lower():
                 # we have api info in the cfg file
                 return match
 
-        print('ERROR: API key for \'' + self.getName() + '\' exchange not found in secrets.cfg.')
+        print('ERROR: API key for \'' + self.get_name() + '\' exchange not found in secrets.cfg.')
         return None
 
     # private helper methods
-    def _formatRequestHeaders(self, endpoint: str) -> dict:
+    def _format_request_headers(self, endpoint: str) -> dict:
         # move these keys to a kucoin config file
-        apiInfo = self._getApiInfo()
+        api_info = self._get_api_info()
 
-        api_key = apiInfo[1]
-        api_secret = apiInfo[2]
-        api_passphrase = apiInfo[3]
+        api_key = api_info[1]
+        api_secret = api_info[2]
+        api_passphrase = api_info[3]
 
         timestamp = int(time.time() * 1000)
         str_to_sign = str(timestamp) + 'GET' + '/api/v1/' + endpoint
@@ -50,56 +51,56 @@ class KucoinExchange(exchange.Exchange):
         return headers
 
     # api methods
-    def getSymbols(self) -> dict:
+    def get_symbols(self) -> dict:
         endpoint = 'symbols'
-        response = requests.get(self.getUrl() + endpoint)
-        if not self._responseOk(response):
+        response = requests.get(self.get_url() + endpoint)
+        if not self._response_ok(response):
             return None
 
         return response.json()
 
-    async def getTime(self) -> dict:
+    async def get_time(self) -> dict:
         endpoint = 'timestamp'
         # this server reports UTC time
         time = {}
-        response = requests.get(self.getUrl() + endpoint)
-        if not self._responseOk(response):
+        response = requests.get(self.get_url() + endpoint)
+        if not self._response_ok(response):
             return None
 
         time['serverTime'] = response.json()['data']
         return time
 
-    def getSymbolInfo(self, symbol: str) -> dict:
+    def get_symbol_info(self, symbol: str) -> dict:
         endpoint = 'market/orderbook/level1'
         param = '?symbol=' + symbol
 
-        response = requests.get(self.getUrl() + endpoint + param)
-        if not self._responseOk(response):
+        response = requests.get(self.get_url() + endpoint + param)
+        if not self._response_ok(response):
             return None
 
         return response.json()
 
-    def getHistoricalData(self, symbol: str, interval: int, start: int, limit: int) -> dict:
+    def get_historical_data(self, symbol: str, interval: int, start: int, limit: int) -> dict:
         pass
 
-    def getAccountInfo(self) -> dict:
+    def get_account_info(self) -> dict:
         endpoint = 'accounts'
-        headers = self._formatRequestHeaders(endpoint)
+        headers = self._format_request_headers(endpoint)
         if headers == None:
             return None
-        response = requests.request('get', self.getUrl() + endpoint, headers=headers)
-        if not self._responseOk(response):
+        response = requests.request('get', self.get_url() + endpoint, headers=headers)
+        if not self._response_ok(response):
             return None
 
         return response.json()
 
-    def getMarginAccountInfo(self) -> dict:
+    def get_margin_account_info(self) -> dict:
         endpoint = 'margin/account'
-        headers = self._formatRequestHeaders(endpoint)
+        headers = self._format_request_headers(endpoint)
         if headers == None:
             return None
-        response = requests.request('get', self.getUrl() + endpoint, headers=headers)
-        if not self._responseOk(response):
+        response = requests.request('get', self.get_url() + endpoint, headers=headers)
+        if not self._response_ok(response):
             return None
 
         return response.json()

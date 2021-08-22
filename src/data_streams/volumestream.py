@@ -7,28 +7,30 @@ import time
 
 class VolumeStream(sp.StreamPublisher):
 
-    def __init__(self, monitoredCoins: dict):
+    def __init__(self, monitored_coins: dict):
         super().__init__()
         self.name = 'VolumeMonitor'
         self._data = {'stream': self.name}
         self.symbols = []
+        self._last_message = {}
+        self.web_socket = None
 
         # adjust coin symbol for the websocket params
-        for coin in monitoredCoins:
-            name = coin.getSymbol().replace(':','')
+        for coin in monitored_coins:
+            name = coin.get_symbol().replace(':','')
             self.symbols.append(f'{coin.exchange}:{name}')
 
-        # self.fields = ['volume']
-        self.fields = ["ch", "chp", "current_session", "description", "local_description",
-             "language", "exchange", "fractional", "is_tradable", "lp", "lp_time", "minmov",
-             "minmove2","original_name", "pricescale", "pro_name", "short_name", "type",
-             "update_mode", "volume","rchp", "rtc", "rtc_time", "currency_code"]
+        self.fields = ['volume']
+        # self.fields = ["ch", "chp", "current_session", "description", "local_description",
+        #      "language", "exchange", "fractional", "is_tradable", "lp", "lp_time", "minmov",
+        #      "minmove2","original_name", "pricescale", "pro_name", "short_name", "type",
+        #      "update_mode", "volume","rchp", "rtc", "rtc_time", "currency_code"]
         self.tvws = tradingview_websocket.TradingViewWebSocket(self.symbols, self.fields)
 
-    def addSubscriber(self, subscriber: ss.StreamSubscriber):
+    def add_subscriber(self, subscriber: ss.StreamSubscriber):
         self._subscribers.append(subscriber)
 
-    def removeSubscriber(self, subscriber: ss.StreamSubscriber):
+    def remove_subscriber(self, subscriber: ss.StreamSubscriber):
         self._subscribers.remove(subscriber)
 
     def notify(self):
@@ -36,10 +38,10 @@ class VolumeStream(sp.StreamPublisher):
             subscriber.update(self._data)
 
     # must invoke as daemon thread
-    def setData(self, newData: dict):
-        newKeys = list(newData)
-        for key in newKeys:
-            self._data[key] = newData[key]
+    def set_data(self, new_data: dict):
+        new_keys = list(new_data)
+        for key in new_keys:
+            self._data[key] = new_data[key]
 
         self.notify()
 
@@ -49,31 +51,34 @@ class VolumeStream(sp.StreamPublisher):
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         symbol = data['p'][1]['n']
         volume = data['p'][1]['v']['volume']
-
         # filter data here
 
-        newData = {
+        new_data = {
             'symbol': symbol,
             'volume': volume,
             'time': timestamp
         }
-        # self.setData(newData)
-        print(message)
-        # print(f'tick :timestamp: {timestamp} :symbol: {symbol} :volume: {volume}')
+        self.set_data(new_data)
+        self._last_message = data
+        # print(message)
 
     def _on_close(self, ws, status_code, message):
-        # print('connection closed')
-        # print(f'code: {status_code}, message: {message}')
+
+        print(f'code: {status_code}, message: {message}')
         if status_code == 1000 and message == '':
+            if self._last_message['m'] == 'protocol_error':
+                print('There was a problem... closing the connection')
+                return
+
             print('creating new websocket connection')
-            self.stream()
+            self.restart_stream()
 
         if status_code == None and message == None:
             print('connection closed unexpectedly')
 
-    def stream(self):
-        # set this up to reconnect on lost connection
-        ws = self.tvws.createWebSocket(on_message=self._on_message, on_close=self._on_close)
-        wsThread = threading.Thread(target=ws.run_forever(), args=(), daemon=True)
-        wsThread.start()
-        wsThread.join()
+    def init_stream(self):
+        self.web_socket = self.tvws.create_web_socket(on_message=self._on_message, on_close=self._on_close)
+        self.web_socket.run_forever()
+
+    def restart_stream(self):
+        self.web_socket.close()

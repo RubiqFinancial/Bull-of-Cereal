@@ -3,14 +3,12 @@ from exchanges import exchange, kucoinxc, bitruexc, exchangepool
 class ExchangeManager:
 
     def __init__(self):
-        self._exchangePool = exchangepool.ExchangePool([ # change exchange pool constructor to use *args notation
+        self._exchange_pool = exchangepool.ExchangePool([ # change exchange pool constructor to use *args notation
             kucoinxc.KucoinExchange(),
-            bitruexc.BitrueExchange()
-        ])
+            bitruexc.BitrueExchange()])
 
-    def getExchanges(self) -> list:
-        return self._exchangePool.getExchanges()
+    def get_exchanges(self) -> list:
+        return self._exchange_pool.get_exchanges()
 
-    def getExchange(self, exchange: str) -> exchange.Exchange:
-        exchange = exchange.lower()
-        return self._exchangePool.getExchange(exchange)
+    def get_exchange(self, exchange: exchange.ExchangeName) -> exchange.Exchange:
+        return self._exchange_pool.get_exchange(exchange)
