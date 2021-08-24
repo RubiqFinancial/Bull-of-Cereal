@@ -4,6 +4,7 @@ import time
 import datetime
 import asyncio
 
+
 class TradingView:
 
     def __init__(self):

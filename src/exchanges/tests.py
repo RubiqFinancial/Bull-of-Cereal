@@ -6,6 +6,7 @@ import requests
 import asyncio
 import unittest
 
+
 class TestExchangeMethods(unittest.TestCase):
 
     def test_Exchange(self):
@@ -52,6 +53,7 @@ class TestExchangeManagerMethods(unittest.TestCase):
     def test_get_exchange_kucoin(self):
         xc_manager = exchangemanager.ExchangeManager()
         self.assertEqual(xc_manager.get_exchange(exchange.ExchangeName.KUCOIN), kucoinxc.KucoinExchange())
+
 
 if __name__ == '__main__':
     unittest.main()

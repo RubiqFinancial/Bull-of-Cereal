@@ -5,6 +5,7 @@ import threading
 import json
 import time
 
+
 class VolumeStream(sp.StreamPublisher):
 
     def __init__(self, monitored_coins: dict):
@@ -70,7 +71,7 @@ class VolumeStream(sp.StreamPublisher):
             print('creating new websocket connection')
             self.restart_stream()
 
-        if status_code == None and message == None:
+        if status_code is None and message is None:
             print('connection closed unexpectedly')
 
     def init_stream(self):

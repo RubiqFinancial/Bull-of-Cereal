@@ -2,6 +2,7 @@ from trade_engine import candle
 from exchanges import exchange
 from enum import Enum
 
+
 class Currency(Enum):
     USDT = 'USDT'
     BTC = 'BTC'

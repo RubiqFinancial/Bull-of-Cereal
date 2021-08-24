@@ -3,6 +3,7 @@ from trade_engine import engine
 
 import unittest
 
+
 class TestAutoview(unittest.TestCase):
 
     def test_init_autoview(self):

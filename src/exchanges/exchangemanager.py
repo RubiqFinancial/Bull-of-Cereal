@@ -1,5 +1,6 @@
 from exchanges import exchange, kucoinxc, bitruexc, exchangepool
 
+
 class ExchangeManager:
 
     def __init__(self):

@@ -1,5 +1,6 @@
 from exchanges import exchange
 
+
 class ExchangePool:
 
     def __init__(self, exchanges=[]):
@@ -24,6 +25,6 @@ class ExchangePool:
 
         return None
 
-    async def compare_exchange_prices(symbol: str, exchanges=[]) -> dict:
+    async def compare_exchange_prices(self, symbol: str, exchanges=[]) -> dict:
         if not bool(exchanges):
             exchanges = self._exchanges

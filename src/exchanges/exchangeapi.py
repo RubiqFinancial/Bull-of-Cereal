@@ -6,9 +6,11 @@ import pandas as pd
 app = Flask(__name__)
 api = Api(app)
 
+
 class Exchanges(Resource):
     def get(self):
         return {'exchange_name': 'exchange'}, 200
+
 
 class Alerts(Resource):
     def post(self):

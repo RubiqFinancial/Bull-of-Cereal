@@ -1,5 +1,6 @@
 from abc import abstractmethod
 
+
 class StreamSubscriber:
 
     def __init__(self):

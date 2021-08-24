@@ -6,6 +6,7 @@ import json
 import time
 import threading
 
+
 class TradeEngine(ss.StreamSubscriber):
 
     def __init__(self):
@@ -36,6 +37,7 @@ class TradeEngine(ss.StreamSubscriber):
 
     def is_monitored_coin(self, coin: coin.Coin) -> bool:
         pass
+
 
 if __name__ == '__main__':
     # pretend api

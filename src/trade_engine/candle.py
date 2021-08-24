@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Interval(Enum):
     ONE_MINUTE = '1'
     FIFTEEN_MINUTE = '15'
@@ -19,7 +20,7 @@ class Candle:
         self.close = 0.0
 
     def __eq__(self, obj) -> bool:
-        if (type(self) != type(obj)):
+        if type(self) != type(obj):
             return False
 
         return (obj.interval == self.interval and

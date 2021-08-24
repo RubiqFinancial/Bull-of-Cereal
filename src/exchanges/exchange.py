@@ -14,14 +14,15 @@ class Exchange:
         self._url = None
 
     def __eq__(self, obj):
-        if (type(obj) is type(self)):
-            if (obj.get_name() == self.get_name()):
-                if (obj.get_url() == self.get_url()):
+        if type(obj) is type(self):
+            if obj.get_name() == self.get_name():
+                if obj.get_url() == self.get_url():
                     return True
         return False
 
+    @staticmethod
     def _response_ok(self, response: requests.Response) -> bool:
-        if response == None:
+        if response is None:
             return False
 
         if response.status_code == 200:
@@ -36,7 +37,7 @@ class Exchange:
         self._url = url
 
     def set_name(self, name):
-        if (type(name) != ExchangeName):
+        if type(name) != ExchangeName:
             raise TypeError('name must be of type \'ExchangeName\'')
         self._name = name
 

@@ -1,6 +1,7 @@
 from data_streams import stream_subscriber as ss
 from abc import abstractmethod
 
+
 class StreamPublisher:
 
     def __init__(self):

@@ -12,6 +12,7 @@ import re
 import asyncio
 import requests
 
+
 class TradingViewWebSocket:
 
     def __init__(self, symbols, fields):
@@ -32,24 +33,28 @@ class TradingViewWebSocket:
             print("error")
 
     # generates session id string
-    def _generate_session(self):
+    @staticmethod
+    def _generate_session():
         string_length = 12
         letters = string.ascii_lowercase
         random_string = ''.join(random.choice(letters) for i in range(string_length))
         return "qs_" + random_string
 
     # generates chart session id string
-    def _generate_chart_session(self):
+    @staticmethod
+    def _generate_chart_session():
         string_length = 12
         letters = string.ascii_lowercase
         random_string = ''.join(random.choice(letters) for i in range(string_length))
         return "cs_" + random_string
 
-    def _prepend_header(self, st):
+    @staticmethod
+    def _prepend_header(st):
         return "~m~" + str(len(st)) + "~m~" + st
 
-    def _construct_message(self, func, param_list):
-        #json_mylist = json.dumps(mylist, separators=(',', ':'))
+    @staticmethod
+    def _construct_message(func, param_list):
+        # json_mylist = json.dumps(mylist, separators=(',', ':'))
         return json.dumps({
             "m": func,
             "p": param_list
@@ -102,7 +107,6 @@ class TradingViewWebSocket:
         # self._sendMessage(ws, 'resolve_symbols', [chart_session, 'sds_sym1', self.symbols])
         # ws.send('~m~144~m~{"m":"resolve_symbol","p":["cs_1fufbON7frBP","sds_sym_1","={\"symbol\":\"KUCOIN:BTCUSDT\",\"adjustment\":\"splits\",\"session\":\"extended\"}"]}')
         # self._sendMessage(ws, 'create_series', [chart_session, 'sds_1', 's1', 'sds_sym1', '60', 300, ''])
-
 
     def create_web_socket(self, on_message=None, on_error=None, on_close=None):
         on_message = self.on_message if on_message == None else on_message

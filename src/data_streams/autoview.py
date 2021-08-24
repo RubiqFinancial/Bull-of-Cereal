@@ -2,6 +2,7 @@ from data_streams import stream_publisher as sp
 from data_streams import stream_subscriber as ss
 import threading
 
+
 class Autoview(sp.StreamPublisher):
 
     def __init__(self):

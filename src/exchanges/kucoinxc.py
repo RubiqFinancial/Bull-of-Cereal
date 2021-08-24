@@ -8,6 +8,7 @@ import requests
 import re
 import time
 
+
 class KucoinExchange(Exchange):
 
     def __init__(self):
@@ -62,13 +63,13 @@ class KucoinExchange(Exchange):
     async def get_time(self) -> dict:
         endpoint = 'timestamp'
         # this server reports UTC time
-        time = {}
+        xc_time = {}
         response = requests.get(self.get_url() + endpoint)
         if not self._response_ok(response):
             return None
 
-        time['serverTime'] = response.json()['data']
-        return time
+        xc_time['serverTime'] = response.json()['data']
+        return xc_time
 
     def get_symbol_info(self, symbol: str) -> dict:
         endpoint = 'market/orderbook/level1'
@@ -86,7 +87,7 @@ class KucoinExchange(Exchange):
     def get_account_info(self) -> dict:
         endpoint = 'accounts'
         headers = self._format_request_headers(endpoint)
-        if headers == None:
+        if headers is None:
             return None
         response = requests.request('get', self.get_url() + endpoint, headers=headers)
         if not self._response_ok(response):
@@ -97,7 +98,7 @@ class KucoinExchange(Exchange):
     def get_margin_account_info(self) -> dict:
         endpoint = 'margin/account'
         headers = self._format_request_headers(endpoint)
-        if headers == None:
+        if headers is None:
             return None
         response = requests.request('get', self.get_url() + endpoint, headers=headers)
         if not self._response_ok(response):

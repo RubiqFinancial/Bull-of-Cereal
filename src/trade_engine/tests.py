@@ -3,8 +3,10 @@ from exchanges import exchange
 import tradingview_ta as tv
 import unittest
 
+
 class TestTradeEngine(unittest.TestCase):
     pass
+
 
 class TestCoin(unittest.TestCase):
 
@@ -60,6 +62,7 @@ class TestCoin(unittest.TestCase):
         test_coin = coin.Coin(coin.Currency.BTC, coin.Currency.USDT, exchange.ExchangeName.KUCOIN)
         self.assertEqual(test_coin.get_symbol_string(), 'Kucoin:BTCUSDT')
 
+
 class TestCandles(unittest.TestCase):
 
     def test_candle_interval(self):
@@ -99,6 +102,7 @@ class TestCandles(unittest.TestCase):
         keys = ['interval', 'open', 'high', 'low', 'close']
         self.assertEqual(list(test_candle.get_json()), keys)
         self.assertEqual(test_candle.get_json()['interval'], candle.Interval.ONE_MINUTE)
+
 
 if __name__ == '__main__':
     unittest.main()

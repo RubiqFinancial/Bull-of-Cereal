@@ -3,6 +3,7 @@ from exchanges.exchange import ExchangeName
 
 import requests
 
+
 class BitrueExchange(Exchange):
 
     def __init__(self):
