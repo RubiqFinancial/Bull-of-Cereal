@@ -1,8 +1,7 @@
 requests
 asyncio
-hmac
-base64
-hashlib
+pandas
 flask
+flask_restful
 tradingview_ta (MIT)
 websocket-client

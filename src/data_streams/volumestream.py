@@ -18,7 +18,7 @@ class VolumeStream(sp.StreamPublisher):
         self.symbols = [coin.get_symbol_string() for coin in monitored_coins]
 
         self.fields = ['volume']
-        print(self.symbols)
+        # print(self.symbols)
         # self.fields = ["ch", "chp", "current_session", "description", "local_description",
         #      "language", "exchange", "fractional", "is_tradable", "lp", "lp_time", "minmov",
         #      "minmove2","original_name", "pricescale", "pro_name", "short_name", "type",
@@ -35,7 +35,6 @@ class VolumeStream(sp.StreamPublisher):
         for subscriber in self._subscribers:
             subscriber.update(self._data)
 
-    # must invoke as daemon thread
     def set_data(self, new_data: dict):
         new_keys = list(new_data)
         for key in new_keys:
@@ -62,7 +61,7 @@ class VolumeStream(sp.StreamPublisher):
 
     def _on_close(self, ws, status_code, message):
 
-        print(f'code: {status_code}, message: {message}')
+        # print(f'code: {status_code}, message: {message}')
         if status_code == 1000 and message == '':
             if self._last_message['m'] == 'protocol_error':
                 print('There was a problem... closing the connection')
@@ -72,7 +71,7 @@ class VolumeStream(sp.StreamPublisher):
             self.restart_stream()
 
         if status_code is None and message is None:
-            print('connection closed unexpectedly')
+            print('Keyboard interrupt: connection closed')
 
     def init_stream(self):
         self.web_socket = self.tvws.create_web_socket(on_message=self._on_message, on_close=self._on_close)

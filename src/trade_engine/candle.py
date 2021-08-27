@@ -31,7 +31,7 @@ class Candle:
 
     def get_json(self) -> dict:
         return {
-            'interval': self.interval,
+            'interval': self.interval.value,
             'open': self.open,
             'high': self.high,
             'low': self.low,

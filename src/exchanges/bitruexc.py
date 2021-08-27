@@ -30,3 +30,6 @@ class BitrueExchange(Exchange):
 
     def get_account_info(self) -> dict:
         pass
+
+    def get_margin_account_info(self):
+        print('error: bitrue cannot trade on margin')

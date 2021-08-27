@@ -14,7 +14,6 @@ class TradeEngine(ss.StreamSubscriber):
             coin.Coin(coin.Currency.BTC, coin.Currency.USDT, ExchangeName.KUCOIN),
             coin.Coin(coin.Currency.ETH, coin.Currency.USDT, ExchangeName.KUCOIN)
         ]
-        # print(self.monitoredCoins[0].candles[candle.Interval.FIFTEEN_MINUTE].high)
         self._data_streams = []
         self._data_map = {}
 
@@ -35,8 +34,28 @@ class TradeEngine(ss.StreamSubscriber):
     def _run_analysis(self):
         pass
 
-    def is_monitored_coin(self, coin: coin.Coin) -> bool:
-        pass
+    def is_monitoring(self, coin) -> bool: # coin can be the name string or a Coin object
+        if coin is None:
+            return False
+
+        if type(coin) == str:
+             for monitored_coin in self.monitored_coins:
+                 if coin == monitored_coin.get_symbol_string():
+                    return True
+
+        if type(coin) == coin.Coin:
+            if coin in self.monitored_coins:
+                return True
+
+        print('ERROR: coin cannot be read.  Returning False')
+        return False
+
+    def get_json(self):
+        return {
+            'coins': self.monitored_coins,
+            'streams': self._data_streams,
+            'map': self._data_map
+        }
 
 
 if __name__ == '__main__':
@@ -50,3 +69,4 @@ if __name__ == '__main__':
     # avThread.start()
     vmThread = threading.Thread(target=vm.init_stream(), daemon=True)
     vmThread.start()
+    print("hello, world!")

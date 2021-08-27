@@ -41,18 +41,18 @@ class Coin:
 
     def get_json(self) -> dict:
         return {
-            'base': self.base,
-            'quote': self.quote,
-            'exchange': self.exchange,
+            'base': self.base.value,
+            'quote': self.quote.value,
+            'exchange': self.exchange.value,
             'price': self.price,
             'volume': self.volume,
             'priceChange': self.price_change,
             'volumeChange': self.volume_change,
             'rating': self.rating,
             'candles': {
-                candle.Interval.ONE_MINUTE: self.candles[candle.Interval.ONE_MINUTE].get_json(),
-                candle.Interval.FIFTEEN_MINUTE: self.candles[candle.Interval.FIFTEEN_MINUTE].get_json(),
-                candle.Interval.ONE_HOUR: self.candles[candle.Interval.ONE_HOUR].get_json()
+                candle.Interval.ONE_MINUTE.name: self.candles[candle.Interval.ONE_MINUTE].get_json(),
+                candle.Interval.FIFTEEN_MINUTE.name: self.candles[candle.Interval.FIFTEEN_MINUTE].get_json(),
+                candle.Interval.ONE_HOUR.name: self.candles[candle.Interval.ONE_HOUR].get_json()
             },
             'ema5': self.ema5,
             'ema13': self.ema13,

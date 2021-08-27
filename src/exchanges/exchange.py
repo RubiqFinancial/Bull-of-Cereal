@@ -1,5 +1,7 @@
 import requests
 from enum import Enum
+from abc import abstractmethod
+
 
 class ExchangeName(Enum):
     KUCOIN = 'Kucoin'
@@ -46,3 +48,11 @@ class Exchange:
 
     def get_name(self) -> ExchangeName:
         return self._name
+
+    @abstractmethod
+    def get_account_info(self):
+        pass
+
+    @abstractmethod
+    def get_margin_account_info(self):
+        pass
